@@ -1,0 +1,66 @@
+<body style='max-width: 700px; margin: auto; text-align: center; border: 0px solid green;'>
+
+
+<h1>Preview Training Data</h1>
+
+<p>
+Preview the first 100 images from the different training set libraries.
+</p>
+
+<div id='container'></div>
+
+<script>
+
+let paths = [ '01-basic/trainingdata/trainingimages/',
+	   	      '02-randombackgrounds/trainingdata/trainingimages/',
+		      '03-lighting/trainingdata/trainingimages/' ];
+		  
+for (let p=0; p<paths.length; p++)
+{
+const path = paths[p];
+
+// img0.jpg, img1.jpg ...
+let div = document.createElement('div');
+document.getElementById('container').appendChild( div );
+
+let divl = document.createElement('div');
+divl.style.display = 'inline-block';
+div.appendChild( divl );
+
+let img = document.createElement('img');
+img.width = img.height = '340';
+img.src = path + 'img' + 4 + '.jpg';
+divl.appendChild( img );
+
+let divr = document.createElement('div');
+divr.style.display = 'inline-block';
+div.appendChild( divr );
+for (let i=1; i<100; i++)
+{
+	let img = document.createElement('img');
+	img.width = img.height = '30';
+	img.src = path + 'img' + i + '.jpg';
+	divr.appendChild( img );
+	img.style.border = '0px solid blue';
+	img.style.padding = '1px 0px 0px 1px';
+	img.style.margin = '0px';
+	
+	if ( i>0 && i%9==0 )
+	{
+		let d = document.createElement('span');
+		divr.appendChild( d );
+		d.innerHTML = '<br style="margin:0;padding:0;border:0;line-height:0;">';
+	}
+}
+
+let dbr = document.createElement('span');
+document.getElementById('container').appendChild( dbr );
+dbr.innerHTML = '<br style="margin:0;padding:0;border:0;line-height:1;">';
+		
+}// end for paht
+
+</script>
+
+<br><br>
+
+</body>
