@@ -42,6 +42,7 @@ for (let i=1; i<100; i++)
 	img.style.border = '0px solid blue';
 	img.style.padding = '1px 0px 0px 1px';
 	img.style.margin = '0px';
+	img.onmouseover = hover;
 	
 	if ( i>0 && i%9==0 )
 	{
@@ -56,6 +57,14 @@ document.getElementById('container').appendChild( dbr );
 dbr.innerHTML = '<br style="margin:0;padding:0;border:0;line-height:1;">';
 		
 }// end for paht
+
+function hover(e)
+{
+	let leftImg = e.srcElement.parentElement.parentElement.children[0].children[0]; 
+	// console.log( leftImg );
+	
+	leftImg.src = e.srcElement.src;
+}
 
 </script>
 

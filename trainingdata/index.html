@@ -6,7 +6,26 @@
 <h1>Preview Training Data</h1>
 
 <p>
-Preview the first 100 images from the different training set libraries.
+Preview the first <b>100</b> images from the different training set libraries.
+</p>
+
+<p>
+The synthetic data is divided up into areas that focus on specific aspects (e.g., football field, player poses, )
+</p>
+
+
+<h2>Training Data Images</h2>
+
+Each sample set consists of 3000 generated images for the training data.
+
+<ul>
+<li> Basic (football field only with keypoint locations) </li>
+<li> Random Backgrounds (random images are placed in the background) </li>
+<li> Different lighting configurations </li>
+</ul>
+
+<p>
+Note the view and orientation of the generated images are unique for each of the 3000 images. The keypoint locations for each image are stored in the folder in a csv file.
 </p>
 
 <div id='container'></div>
@@ -46,6 +65,7 @@ for (let i=1; i<100; i++)
 	img.style.border = '0px solid blue';
 	img.style.padding = '1px 0px 0px 1px';
 	img.style.margin = '0px';
+	img.onmouseover = hover;
 	
 	if ( i>0 && i%9==0 )
 	{
@@ -60,6 +80,14 @@ document.getElementById('container').appendChild( dbr );
 dbr.innerHTML = '<br style="margin:0;padding:0;border:0;line-height:1;">';
 		
 }// end for paht
+
+function hover(e)
+{
+	let leftImg = e.srcElement.parentElement.parentElement.children[0].children[0]; 
+	// console.log( leftImg );
+	
+	leftImg.src = e.srcElement.src;
+}
 
 </script>
 
