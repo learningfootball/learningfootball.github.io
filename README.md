@@ -5,4 +5,10 @@ Webpage: Access [learningfootball.github.io](https://learningfootball.github.io)
 GitHub Repository: [https://github.com/learningfootball/](https://github.com/learningfootball/learningfootball.github.io).
 
 
-
+## Prerequisites
+- This code was developed under Windows (10) and Linux (Debian) (64bit) and was tested only on these environments.  
+- The generated images were done using Chrome (105/64bit) and the WebGPU API.
+ 
+- Python (3.1)
+  - PyTorch 1.11.0
+  - CUDA >= 11.7
