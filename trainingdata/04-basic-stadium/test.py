@@ -19,8 +19,8 @@ import matplotlib.image as mpimg
 
 import cv2
 # load in color image for face detection
-image = cv2.imread('misc/test01.jpg')
-#image = cv2.imread('misc/stadium.jpg')
+image = cv2.imread('./trainingdata/trainingimages/img4.jpg')
+#image = cv2.imread('../../resources/misc/stadium.jpg')
 
 
 # switch red and blue color channels 
@@ -55,7 +55,7 @@ net = Net()
 
 ## TODO: load the best saved model parameters (by your path name)
 ## You'll need to un-comment the line below and add the correct name for *your* saved model
-net.load_state_dict(torch.load('savedmodels/keypoints_model_adam_SmoothL1_50_batchsize_100_epochs_12800_6400_1000_dense.pt'))
+net.load_state_dict(torch.load('savedmodels/keypoints_model_adam_SmoothL1_50_batchsize_500_epochs_12800_6400_1000_dense.pt'))
 
 ## print out your net and prepare it for testing (uncomment the line below)
 net.eval()

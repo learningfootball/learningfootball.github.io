@@ -19,8 +19,8 @@ import matplotlib.image as mpimg
 
 import cv2
 # load in color image for face detection
-image = cv2.imread('misc/test01.jpg')
-#image = cv2.imread('misc/stadium.jpg')
+image = cv2.imread('../../resources/misc/test01.jpg')
+#image = cv2.imread('../../resources/misc/stadium.jpg')
 
 
 # switch red and blue color channels 

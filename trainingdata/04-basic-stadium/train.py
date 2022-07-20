@@ -44,7 +44,7 @@ def show_keypoints(image, key_pts):
 # Display a few different types of images by changing the index n
 
 # select an image by index in our data frame
-n = 0
+n = 2
 image_name = key_pts_frame.iloc[n, 0]
 key_pts = key_pts_frame.iloc[n, 1:].values
 key_pts = key_pts.astype('float').reshape(-1, 2)
@@ -53,6 +53,8 @@ plt.figure(figsize=(5, 5))
 show_keypoints(mpimg.imread(os.path.join('trainingdata/trainingimages/', image_name)), key_pts)
 # plt.show()
 
+
+# exit()
 
 
 # ------------
