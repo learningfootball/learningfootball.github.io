@@ -1,8 +1,11 @@
-
+<html>
+<head>
+<title>Identifying and Extracting Football Features from Real-World Media Sources using Only Synthetic Training Data</title>
+</head>
 <body style='max-width: 700px; margin: auto; border: 0px solid green;'>
-
+<br>
 <div style='text-align: center'>
-<h1>Identifying and Extracting Football Features from Real-World Media Sources using Only Synthetic Training Data</h1>
+<h1>Abstract: Identifying and Extracting Football Features from Real-World Media Sources using Only Synthetic Training Data</h1>
 
 <p>
 Real-world images used for training machine learning algorithms are often unstructured and inconsistent. The process of analysing and tag- ging these images can be costly and error prone (also availability, gaps and legal conundrums). However, as we demonstrate in this article, the potential to generate accurate graphical images that are indistinguishable from real-world sources has a multitude of benefits in machine learning paradigms. One such example of this is football data from broadcast services (television and other streaming media sources). The football games are usually recorded from multiple sources (cameras and phones) and resolutions, not to mention, occlusion of visual details and other artefacts (like blurring, weathering and lighting conditions) which make it difficult to accurately identify features. We demonstrate an approach which is able to overcome these limitations using generated tagged and structured images. The generated images are able to simulate a variety views and conditions (including noise and blurring) which may only occur sporadically in real-world data and make it difficult for machine learning algorithm to ‘cope’ with these unforeseen problems in real-data. This approach enables us to rapidly train and prepare a robust solution that accurately extracts features (e.g., spacial locations, markers on the pitch, player positions, ball location and camera FOV) from real-world football match sources for analytical purposes.
@@ -10,6 +13,22 @@ Real-world images used for training machine learning algorithms are often unstru
 </div>
 
 <br>
+
+<div id='container' style='display: flex; min-height:400px;'>
+	<div id='left' style='width:20%;border:1px solid orange;'>
+		<div id='page1' style="border:1px solid green;background-size:cover;width:100%;height:33%;">
+		</div>
+		<div id='page2' style="border:1px solid green;background-size:cover;width:100%;height:33%;">
+		</div>
+		<div id='page3' style="border:1px solid green;background-size:cover;width:100%;height:33%;">
+		</div>
+	</div>
+	<div id='right' style='flex-grow: 100; border: 1px solid purple; min-height:400px;'>
+		<div id='page0' style="border:1px solid blue;background-size:cover;width:100%;height:100%;">
+		</div>
+	</div>
+	
+</div>
 
 <ul>
 <li> <a href='/trainingdata/index.html'>Sample view training data images</a></li>
@@ -25,4 +44,91 @@ GitHub Repository: <a href='https://github.com/learningfootball/learningfootball
 
 
 
+<script>
+
+async function displayPage(pageNumber)
+{
+	console.log('arg:', pageNumber );
+	
+	//if ( pageNumber == '+' ) pageNumber = curpage+1;
+	//if ( pageNumber == '-' ) pageNumber = curpage-1;
+	
+	
+	curpage = parseInt(pageNumber);
+	
+	console.log('loading:', pageNumber );
+	
+	let page = document.getElementById('page'+pageNumber);
+	page.innerHTML = '';
+	page.style['background-image'] = 'url(./paper/page'+pageNumber+'.jpg)';
+	
+	
+	
+	let p = await fetch('./paper/page'+pageNumber+'.json');
+	let t = await p.text();
+	
+	
+
+	let json = JSON.parse( t );
+
+	//console.log('num text blocks:', json.length );
+
+	console.log('text block 0:', json[0] )
+	// console.log('raw data:', t );
+
+	const w = 612;
+	const h = 792;
+	
+	
+	let cp = await fetch('./paper/common.json');
+	let ct = await cp.json();
+	let mostfontname = Object.entries( ct.fontnames ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
+	let mostfontsize = Object.entries( ct.fontsizes ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
+	console.log('mostfontname:', mostfontname );
+	console.log('mostfontsize:', mostfontsize );
+
+
+	json.forEach( (d)=>{
+
+		let div = document.createElement('div');
+		div.style.position = 'absolute';
+		div.style.left = d.x1 + 'px';
+		div.style.bottom  = d.y1 + 'px';
+		div.style.width = (d.x2-d.x1) + 'px';
+		div.style.height = ((d.y2-d.y1)) + 'px';
+		div.style.border = '1px solid green';
+		page.appendChild( div );
+		
+		
+		if ( d.fontnames.length == 1 &&
+		     d.fontsizes.length == 1 && 
+		     //d.fontnames[0] == mostfontname &&
+		     d.fontsizes[0] == mostfontsize &&
+			 // d.text.charAt(0) == d.text.charAt(0).toUpperCase()
+			 d.text.split(' ').length > 12
+			)
+		{
+			div.style.border = '3px solid red';
+			console.log('red...');
+		}
+		
+		
+		div.title = d.text.substring(0,50) + '...';
+		
+		div.title += '\n';
+		div.title += 'font:' + d.fontsizes.join(' ');
+		div.title += 'name:' + d.fontnames.join(' ');
+		
+
+	});
+}// displayPage(..)
+displayPage(0);
+displayPage(1);
+displayPage(2);
+displayPage(3);
+</script>
+
+
+
 </body>
+</html>
