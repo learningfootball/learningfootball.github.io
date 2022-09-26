@@ -23,19 +23,19 @@ Real-world images used for training machine learning algorithms are often unstru
 
 <br><br><br><br>
 
-<div id='container' style='display: flex; min-height:740px;border:1px solid blue;'>
+<div id='container' style='display: flex; min-height:740px;border:0px solid blue;'>
 	<div id='left' style='width:20%;border:0px solid orange;'>
-		<div id='page1' onmouseover='focusPage(0);' style="position:relative;border:1px solid green;background-size:cover;width:99%;height:24.7%;">
+		<div id='page1' onmouseover='focusPage(0);' style="position:relative;border:1px solid gray;background-size:cover;width:99%;height:24.8%;">
 		</div>
-		<div id='page2' onmouseover='focusPage(1);' style="position:relative;border:1px solid green;background-size:cover;width:99%;height:24.7%;">
+		<div id='page2' onmouseover='focusPage(1);' style="position:relative;border:1px solid gray;background-size:cover;width:99%;height:24.8%;">
 		</div>
-		<div id='page3' onmouseover='focusPage(2);' style="position:relative;border:1px solid green;background-size:cover;width:99%;height:24.7%;">
+		<div id='page3' onmouseover='focusPage(2);' style="position:relative;border:1px solid gray;background-size:cover;width:99%;height:24.8%;">
 		</div>
-		<div id='page4' onmouseover='focusPage(3);' style="position:relative;border:1px solid green;background-size:cover;width:99%;height:24.7%;">
+		<div id='page4' onmouseover='focusPage(3);' style="position:relative;border:1px solid gray;background-size:cover;width:99%;height:24.8%;">
 		</div>
 	</div>
 	<div id='right' style='flex-grow: 100; border: 0px solid purple; min-height:740px;'>
-		<div id='page0' style="position:relative;border:0px solid blue;background-size:cover;width:100%;height:100%;">
+		<div id='page0' style="position:relative;border:1px solid gray;background-size:cover;width:100%;height:100%;">
 		</div>
 	</div>
 	
@@ -175,6 +175,36 @@ window.addEventListener('resize', ()=>{
 
 </script>
 
+
+<style>
+#bkball:before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    z-index: -1;
+	opacity:0.03;
+	transform-origin: 50% 50%;
+    background: url(https://learningfootball.github.io/images/ball.svg);
+	background-size: cover;
+    transform: rotate(30deg);
+	animation: rotation 150.0s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+</style>
+
+<div id='bkball'>
+</div>
 
 <br><br><br><br><br><br>
 </body>
