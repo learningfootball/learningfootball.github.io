@@ -1,0 +1,122 @@
+
+Welcome... pdfs and fun!
+
+<div id='container'></div>
+
+<div id='page' style="position:absolute;left:40px;top:40px;width:595.3px;height:841.9px; border:1px solid blue;background-size:cover;">
+</div>
+
+<style>
+* {
+padding: 0;
+margin: 0;
+box-sizing: content-box;
+}
+</style>
+
+<script>
+
+// 595.32, 841.92
+// 1 pt = 1.333(3) px
+
+// 8.5 inch	816 px - resolution 96
+// 1700x2200
+// 8.50 x 11.00 inch
+
+// (0, 0, 612, 792)
+
+
+
+var curpage = 0;
+
+async function displayPage(pageNumber)
+{
+	console.log('arg:', pageNumber );
+	
+	if ( pageNumber == '+' ) pageNumber = curpage+1;
+	if ( pageNumber == '-' ) pageNumber = curpage-1;
+	
+	
+	curpage = parseInt(pageNumber);
+	
+	console.log('loading:', pageNumber );
+	
+	let page = document.getElementById('page');
+	page.innerHTML = '';
+	page.style['background-image'] = 'url(./page'+pageNumber+'.jpg)';
+	
+	
+	
+	let p = await fetch('page'+pageNumber+'.json');
+	let t = await p.text();
+	
+	
+
+	let json = JSON.parse( t );
+
+	console.log('num text blocks:', json.length );
+
+	console.log('text block 0:', json[0] )
+	// console.log('raw data:', t );
+
+	const w = 612;
+	const h = 792;
+	
+	
+	let cp = await fetch('common.json');
+	let ct = await cp.json();
+	let mostfontname = Object.entries( ct.fontnames ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
+	let mostfontsize = Object.entries( ct.fontsizes ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
+	console.log('mostfontname:', mostfontname );
+	console.log('mostfontsize:', mostfontsize );
+
+
+	json.forEach( (d)=>{
+
+		let div = document.createElement('div');
+		div.style.position = 'absolute';
+		div.style.left = d.x1 + 'px';
+		div.style.bottom  = d.y1 + 'px';
+		div.style.width = (d.x2-d.x1) + 'px';
+		div.style.height = ((d.y2-d.y1)) + 'px';
+		div.style.border = '1px solid green';
+		page.appendChild( div );
+		
+		
+		if ( d.fontnames.length == 1 &&
+		     d.fontsizes.length == 1 && 
+		     //d.fontnames[0] == mostfontname &&
+		     d.fontsizes[0] == mostfontsize &&
+			 // d.text.charAt(0) == d.text.charAt(0).toUpperCase()
+			 d.text.split(' ').length > 12
+			)
+		{
+			div.style.border = '3px solid red';
+			console.log('red...');
+		}
+		
+		
+		div.title = d.text.substring(0,50) + '...';
+		
+		div.title += '\n';
+		div.title += 'font:' + d.fontsizes.join(' ');
+		div.title += 'name:' + d.fontnames.join(' ');
+		
+
+	});
+}// displayPage(..)
+
+
+
+displayPage(0);
+</script>
+
+
+
+<div onclick='displayPage("+");' style='position:absolute;right:40px;bottom:40px;cursor:hand;'>Page+</div>
+<div onclick='displayPage("-");' style='position:absolute;left:40px;bottom:40px;cursor:hand;'>Page-</div>
+
+
+
+
+
