@@ -14,17 +14,17 @@ Real-world images used for training machine learning algorithms are often unstru
 
 <br>
 
-<div id='container' style='display: flex; min-height:400px;'>
+<div id='container' style='display: flex; min-height:620px;'>
 	<div id='left' style='width:20%;border:1px solid orange;'>
-		<div id='page1' style="border:1px solid green;background-size:cover;width:100%;height:33%;">
+		<div id='page1' onmouseover='displayPage(1);' style="position:relative;border:1px solid green;background-size:cover;width:100%;height:33%;">
 		</div>
-		<div id='page2' style="border:1px solid green;background-size:cover;width:100%;height:33%;">
+		<div id='page2' onmouseover='displayPage(2);' style="position:relative;border:1px solid green;background-size:cover;width:100%;height:33%;">
 		</div>
-		<div id='page3' style="border:1px solid green;background-size:cover;width:100%;height:33%;">
+		<div id='page3' onmouseover='displayPage(3);' style="position:relative;border:1px solid green;background-size:cover;width:100%;height:33%;">
 		</div>
 	</div>
-	<div id='right' style='flex-grow: 100; border: 1px solid purple; min-height:400px;'>
-		<div id='page0' style="border:1px solid blue;background-size:cover;width:100%;height:100%;">
+	<div id='right' style='flex-grow: 100; border: 1px solid purple; min-height:620px;'>
+		<div id='page0' onmouseover='displayPage(0);' style="position:relative;border:1px solid blue;background-size:cover;width:100%;height:100%;">
 		</div>
 	</div>
 	
@@ -46,9 +46,9 @@ GitHub Repository: <a href='https://github.com/learningfootball/learningfootball
 
 <script>
 
-async function displayPage(pageNumber)
+async function displayPage(startNumber)
 {
-	console.log('arg:', pageNumber );
+	// console.log('arg:', pageNumber );
 	
 	//if ( pageNumber == '+' ) pageNumber = curpage+1;
 	//if ( pageNumber == '-' ) pageNumber = curpage-1;
@@ -56,76 +56,80 @@ async function displayPage(pageNumber)
 	
 	curpage = parseInt(pageNumber);
 	
-	console.log('loading:', pageNumber );
-	
-	let page = document.getElementById('page'+pageNumber);
-	page.innerHTML = '';
-	page.style['background-image'] = 'url(./paper/page'+pageNumber+'.jpg)';
-	
-	
-	
-	let p = await fetch('./paper/page'+pageNumber+'.json');
-	let t = await p.text();
-	
-	
-
-	let json = JSON.parse( t );
-
-	//console.log('num text blocks:', json.length );
-
-	console.log('text block 0:', json[0] )
-	// console.log('raw data:', t );
-
-	const w = 612;
-	const h = 792;
-	
-	
-	let cp = await fetch('./paper/common.json');
-	let ct = await cp.json();
-	let mostfontname = Object.entries( ct.fontnames ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
-	let mostfontsize = Object.entries( ct.fontsizes ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
-	console.log('mostfontname:', mostfontname );
-	console.log('mostfontsize:', mostfontsize );
-
-
-	json.forEach( (d)=>{
-
-		let div = document.createElement('div');
-		div.style.position = 'absolute';
-		div.style.left = d.x1 + 'px';
-		div.style.bottom  = d.y1 + 'px';
-		div.style.width = (d.x2-d.x1) + 'px';
-		div.style.height = ((d.y2-d.y1)) + 'px';
-		div.style.border = '1px solid green';
-		page.appendChild( div );
+	for (let nn=0; nn<4; nn++)
+	{
+		let pageNumber = (startNumber + nn) % 4;
+		//console.log('loading:', pageNumber );
+		
+		let page = document.getElementById('page'+nn);
+		page.innerHTML = '';
+		page.style['background-image'] = 'url(https://learningfootball.github.io/paper/page'+pageNumber+'.jpg)';
 		
 		
-		if ( d.fontnames.length == 1 &&
-		     d.fontsizes.length == 1 && 
-		     //d.fontnames[0] == mostfontname &&
-		     d.fontsizes[0] == mostfontsize &&
-			 // d.text.charAt(0) == d.text.charAt(0).toUpperCase()
-			 d.text.split(' ').length > 12
-			)
-		{
-			div.style.border = '3px solid red';
-			console.log('red...');
-		}
 		
+		let p = await fetch('https://learningfootball.github.io/paper/page'+pageNumber+'.json');
+		let t = await p.text();
 		
-		div.title = d.text.substring(0,50) + '...';
-		
-		div.title += '\n';
-		div.title += 'font:' + d.fontsizes.join(' ');
-		div.title += 'name:' + d.fontnames.join(' ');
 		
 
-	});
+		let json = JSON.parse( t );
+
+		//console.log('num text blocks:', json.length );
+
+		console.log('text block 0:', json[0] )
+		// console.log('raw data:', t );
+
+		const w = 612;
+		const h = 792;
+		
+		
+		let cp = await fetch('https://learningfootball.github.io/paper/common.json');
+		let ct = await cp.json();
+		let mostfontname = Object.entries( ct.fontnames ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
+		let mostfontsize = Object.entries( ct.fontsizes ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
+		console.log('mostfontname:', mostfontname );
+		console.log('mostfontsize:', mostfontsize );
+
+
+		json.forEach( (d)=>{
+
+			let div = document.createElement('div');
+			div.style.position = 'absolute';
+			div.style.left = d.x1 + 'px';
+			div.style.bottom  = d.y1 + 'px';
+			div.style.width = (d.x2-d.x1) + 'px';
+			div.style.height = ((d.y2-d.y1)) + 'px';
+			div.style.border = '1px solid green';
+			page.appendChild( div );
+			
+			
+			if ( d.fontnames.length == 1 &&
+				 d.fontsizes.length == 1 && 
+				 //d.fontnames[0] == mostfontname &&
+				 d.fontsizes[0] == mostfontsize &&
+				 // d.text.charAt(0) == d.text.charAt(0).toUpperCase()
+				 d.text.split(' ').length > 12
+				)
+			{
+				div.style.border = '3px solid red';
+				console.log('red...');
+			}
+			
+			
+			div.title = d.text.substring(0,50) + '...';
+			
+			div.title += '\n';
+			div.title += 'font:' + d.fontsizes.join(' ');
+			div.title += 'name:' + d.fontnames.join(' ');
+			
+
+		});
+	}// end for nn
 }// displayPage(..)
+
+
 displayPage(0);
-displayPage(1);
-displayPage(2);
-displayPage(3);
+
 </script>
 
 
