@@ -14,17 +14,19 @@ Real-world images used for training machine learning algorithms are often unstru
 
 <br>
 
-<div id='container' style='display: flex; min-height:620px;'>
+<div id='container' style='display: flex; min-height:740px;'>
 	<div id='left' style='width:20%;border:1px solid orange;'>
-		<div id='page1' onmouseover='displayPage(1);' style="position:relative;border:1px solid green;background-size:cover;width:100%;height:33%;">
+		<div id='page1' onmouseover='focusPage(0);' style="position:relative;border:1px solid green;background-size:cover;width:100%;height:25%;">
 		</div>
-		<div id='page2' onmouseover='displayPage(2);' style="position:relative;border:1px solid green;background-size:cover;width:100%;height:33%;">
+		<div id='page2' onmouseover='focusPage(1);' style="position:relative;border:1px solid green;background-size:cover;width:100%;height:25%;">
 		</div>
-		<div id='page3' onmouseover='displayPage(3);' style="position:relative;border:1px solid green;background-size:cover;width:100%;height:33%;">
+		<div id='page3' onmouseover='focusPage(2);' style="position:relative;border:1px solid green;background-size:cover;width:100%;height:25%;">
+		</div>
+		<div id='page4' onmouseover='focusPage(3);' style="position:relative;border:1px solid green;background-size:cover;width:100%;height:25%;">
 		</div>
 	</div>
-	<div id='right' style='flex-grow: 100; border: 1px solid purple; min-height:620px;'>
-		<div id='page0' onmouseover='displayPage(0);' style="position:relative;border:1px solid blue;background-size:cover;width:100%;height:100%;">
+	<div id='right' style='flex-grow: 100; border: 1px solid purple; min-height:740px;'>
+		<div id='page0' style="position:relative;border:1px solid blue;background-size:cover;width:100%;height:100%;">
 		</div>
 	</div>
 	
@@ -49,97 +51,120 @@ GitHub Repository: <a href='https://github.com/learningfootball/learningfootball
 /*
 	Visualization resource for extracting and display internal pdf data (e.g., text, formatting details and location) 
 */
-async function displayPage(startNumber)
+var curFocus = -1;
+
+async function displayPage(pageNumber, elid)
 {
 	// console.log('arg:', pageNumber );
 	
 	//if ( pageNumber == '+' ) pageNumber = curpage+1;
 	//if ( pageNumber == '-' ) pageNumber = curpage-1;
+		
+	console.log('elid:', elid );
+	let page = document.getElementById( elid );
+	page.innerHTML = '';
+	page.style['background-image'] = 'url(https://learningfootball.github.io/paper/page'+pageNumber+'.jpg)';
 	
+	
+	let ew = page.getBoundingClientRect().width;
+	let eh = page.getBoundingClientRect().height;
+	// "x1": 0, "y1": 0, "x2": 612, "y2": 792
+	
+	
+	let p = await fetch('https://learningfootball.github.io/paper/page'+pageNumber+'.json');
+	let t = await p.text();
+	
+	
+
+	let json = JSON.parse( t );
+
+	//console.log('num text blocks:', json.length );
+
+	console.log('text block 0:', json[0] )
+	// console.log('raw data:', t );
+
+	const w = 612;
+	const h = 792;
+	
+	
+	let cp = await fetch('https://learningfootball.github.io/paper/common.json');
+	let ct = await cp.json();
+	let mostfontname = Object.entries( ct.fontnames ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
+	let mostfontsize = Object.entries( ct.fontsizes ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
+	//console.log('mostfontname:', mostfontname );
+	//console.log('mostfontsize:', mostfontsize );
+
+
+	json.forEach( (d)=>{
+
+		let div = document.createElement('div');
+		div.style.position = 'absolute';
+		div.style.left    = ((d.x1/w)*ew) + 'px';
+		div.style.bottom  = ((d.y1/h)*eh) + 'px';
+		div.style.width   = (((d.x2-d.x1)/w)*ew) + 'px';
+		div.style.height  = (((d.y2-d.y1)/h)*eh) + 'px';
+		div.style.border  = '1px solid green';
+		page.appendChild( div );
+		
+		
+		if ( d.fontnames.length == 1 &&
+			 d.fontsizes.length == 1 && 
+			 //d.fontnames[0] == mostfontname &&
+			 d.fontsizes[0] == mostfontsize &&
+			 // d.text.charAt(0) == d.text.charAt(0).toUpperCase()
+			 d.text.split(' ').length > 12
+			)
+		{
+			div.style.border = '3px solid red';
+			console.log('red...');
+		}
+		
+		
+		div.title = d.text;//.substring(0,50) + '...';
+		div.alt   = d.alt;
+		
+		//div.title += '\n';
+		//div.title += 'font:' + d.fontsizes.join(' ');
+		//div.title += 'name:' + d.fontnames.join(' ');
+		
+
+	});
+
+}// displayPage(..)
+
+
+function focusPage(pageNumber)
+{
+	if ( curFocus == pageNumber ) return;
+	curFocus = pageNumber;
+	
+	displayPage( pageNumber, 'page0' );
 	
 	//curpage = parseInt(pageNumber);
 	
 	for (let nn=0; nn<4; nn++)
 	{
-		let pageNumber = (startNumber + nn) % 4;
+		//let num = (pageNumber + nn) % 4;
 		//console.log('loading:', pageNumber );
 		
-		let page = document.getElementById('page'+nn);
-		page.innerHTML = '';
-		page.style['background-image'] = 'url(https://learningfootball.github.io/paper/page'+pageNumber+'.jpg)';
-		
-		
-		let ew = page.getBoundingClientRect().width;
-		let eh = page.getBoundingClientRect().height;
-		// "x1": 0, "y1": 0, "x2": 612, "y2": 792
-		
-		
-		let p = await fetch('https://learningfootball.github.io/paper/page'+pageNumber+'.json');
-		let t = await p.text();
-		
-		
+		displayPage( nn, 'page'+(nn+1) );
+	}
+}
 
-		let json = JSON.parse( t );
+focusPage(0);
 
-		//console.log('num text blocks:', json.length );
+window.addEventListener('resize', ()=>{
 
-		console.log('text block 0:', json[0] )
-		// console.log('raw data:', t );
-
-		const w = 612;
-		const h = 792;
-		
-		
-		let cp = await fetch('https://learningfootball.github.io/paper/common.json');
-		let ct = await cp.json();
-		let mostfontname = Object.entries( ct.fontnames ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
-		let mostfontsize = Object.entries( ct.fontsizes ).sort( (a,b)=>{ return b[1]-a[1]; } )[0][0];
-		console.log('mostfontname:', mostfontname );
-		console.log('mostfontsize:', mostfontsize );
-
-
-		json.forEach( (d)=>{
-
-			let div = document.createElement('div');
-			div.style.position = 'absolute';
-			div.style.left    = ((d.x1/w)*ew) + 'px';
-			div.style.bottom  = ((d.y1/h)*eh) + 'px';
-			div.style.width   = (((d.x2-d.x1)/w)*ew) + 'px';
-			div.style.height  = (((d.y2-d.y1)/h)*eh) + 'px';
-			div.style.border  = '1px solid green';
-			page.appendChild( div );
-			
-			
-			if ( d.fontnames.length == 1 &&
-				 d.fontsizes.length == 1 && 
-				 //d.fontnames[0] == mostfontname &&
-				 d.fontsizes[0] == mostfontsize &&
-				 // d.text.charAt(0) == d.text.charAt(0).toUpperCase()
-				 d.text.split(' ').length > 12
-				)
-			{
-				div.style.border = '3px solid red';
-				console.log('red...');
-			}
-			
-			
-			div.title = d.text.substring(0,50) + '...';
-			
-			div.title += '\n';
-			div.title += 'font:' + d.fontsizes.join(' ');
-			div.title += 'name:' + d.fontnames.join(' ');
-			
-
-		});
-	}// end for nn
-}// displayPage(..)
-
-
-displayPage(0);
+	console.log('resizing..');
+	let tmp = curFocus;
+	curFocus = -1;
+	focusPage(curFocus);
+	
+});//
 
 </script>
 
 
-
+<br><br><br><br><br><br>
 </body>
 </html>
