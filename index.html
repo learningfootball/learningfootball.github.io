@@ -33,6 +33,7 @@ Real-world images used for training machine learning algorithms are often unstru
 <ul>
 <li> <a href='/trainingdata/index.html'>Sample view training data images</a></li>
 <li> <a href='/resources/overlays/index.html'>Sample view of overlay effects</a></li>
+<li> <a href='/paper/paper.pdf'>Communication Paper</a></li>
 </ul>
 
 <br>
@@ -45,7 +46,9 @@ GitHub Repository: <a href='https://github.com/learningfootball/learningfootball
 
 
 <script>
-
+/*
+	Visualization resource for extracting and display internal pdf data (e.g., text, formatting details and location) 
+*/
 async function displayPage(startNumber)
 {
 	// console.log('arg:', pageNumber );
@@ -54,7 +57,7 @@ async function displayPage(startNumber)
 	//if ( pageNumber == '-' ) pageNumber = curpage-1;
 	
 	
-	curpage = parseInt(pageNumber);
+	//curpage = parseInt(pageNumber);
 	
 	for (let nn=0; nn<4; nn++)
 	{
@@ -65,6 +68,10 @@ async function displayPage(startNumber)
 		page.innerHTML = '';
 		page.style['background-image'] = 'url(https://learningfootball.github.io/paper/page'+pageNumber+'.jpg)';
 		
+		
+		let ew = page.getBoundingClientRect().width;
+		let eh = page.getBoundingClientRect().height;
+		// "x1": 0, "y1": 0, "x2": 612, "y2": 792
 		
 		
 		let p = await fetch('https://learningfootball.github.io/paper/page'+pageNumber+'.json');
@@ -95,11 +102,11 @@ async function displayPage(startNumber)
 
 			let div = document.createElement('div');
 			div.style.position = 'absolute';
-			div.style.left = d.x1 + 'px';
-			div.style.bottom  = d.y1 + 'px';
-			div.style.width = (d.x2-d.x1) + 'px';
-			div.style.height = ((d.y2-d.y1)) + 'px';
-			div.style.border = '1px solid green';
+			div.style.left    = ((d.x1/w)*ew) + 'px';
+			div.style.bottom  = ((d.y1/h)*eh) + 'px';
+			div.style.width   = (((d.x2-d.x1)/w)*ew) + 'px';
+			div.style.height  = (((d.y2-d.y1)/h)*eh) + 'px';
+			div.style.border  = '1px solid green';
 			page.appendChild( div );
 			
 			
