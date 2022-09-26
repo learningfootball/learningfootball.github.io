@@ -1,6 +1,15 @@
 <html>
 <head>
 <title>Identifying and Extracting Football Features from Real-World Media Sources using Only Synthetic Training Data</title>
+
+<style>
+* {
+padding: 0;
+margin: 0;
+box-sizing: content-box;
+}
+</style>
+
 </head>
 <body style='max-width: 700px; margin: auto; border: 0px solid green;'>
 <br>
@@ -12,7 +21,7 @@ Real-world images used for training machine learning algorithms are often unstru
 </p>
 </div>
 
-<br>
+<br><br><br><br>
 
 <div id='container' style='display: flex; min-height:740px;'>
 	<div id='left' style='width:20%;border:1px solid orange;'>
@@ -31,6 +40,8 @@ Real-world images used for training machine learning algorithms are often unstru
 	</div>
 	
 </div>
+
+<br><br>
 
 <ul>
 <li> <a href='/trainingdata/index.html'>Sample view training data images</a></li>
@@ -66,8 +77,8 @@ async function displayPage(pageNumber, elid)
 	page.style['background-image'] = 'url(https://learningfootball.github.io/paper/page'+pageNumber+'.jpg)';
 	
 	
-	let ew = page.getBoundingClientRect().width;
-	let eh = page.getBoundingClientRect().height;
+	let ew = page.getBoundingClientRect().width * 1.02;
+	let eh = page.getBoundingClientRect().height * 0.995;
 	// "x1": 0, "y1": 0, "x2": 612, "y2": 792
 	
 	
@@ -103,7 +114,7 @@ async function displayPage(pageNumber, elid)
 		div.style.bottom  = ((d.y1/h)*eh) + 'px';
 		div.style.width   = (((d.x2-d.x1)/w)*ew) + 'px';
 		div.style.height  = (((d.y2-d.y1)/h)*eh) + 'px';
-		div.style.border  = '1px solid green';
+		div.style.border  = '1px solid rgba(100,100,100,0.2)';
 		page.appendChild( div );
 		
 		
